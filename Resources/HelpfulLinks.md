@@ -1,0 +1,9 @@
+1. https://www.youtube.com/playlist?list=PLF1Z-APd9zK7usPMx3LGMZEHrECUGodd3
+2. https://haskell.mooc.fi/material/ 
+3. https://youtu.be/0if71HOyVjY 
+4. https://youtu.be/Qa8IfEeBJqk
+5. https://exercism.org/tracks/haskell
+6. https://www.seas.upenn.edu/~cis1940/spring13/lectures.html
+7. https://wiki.haskell.org/H-99:_Ninety-Nine_Haskell_Problems
+8. https://github.com/haskell-beginners-2022/course-plan
+9. https://github.com/haskell-beginners-2022/exercises
