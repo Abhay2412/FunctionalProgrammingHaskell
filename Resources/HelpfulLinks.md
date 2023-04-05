@@ -7,3 +7,4 @@
 7. https://wiki.haskell.org/H-99:_Ninety-Nine_Haskell_Problems
 8. https://github.com/haskell-beginners-2022/course-plan
 9. https://github.com/haskell-beginners-2022/exercises
+10. https://www.youtube.com/watch?v=-qhbNGghVfc&list=PLF1Z-APd9zK5uFc8FKr_di9bfsYv8-lbc
