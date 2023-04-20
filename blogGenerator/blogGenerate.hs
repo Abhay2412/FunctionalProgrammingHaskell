@@ -1,9 +1,24 @@
 -- Chapter 3 - Building an HTML Printer Library
+newtype Html
+  = Html String
+
+newtype Structure
+  = Structure String
+
+type Title
+  = String
+
 el :: String -> String -> String
 el tag content = "<" <> tag <> ">" <> content <> "</" <> tag <> ">" 
 
-html_ :: String -> String
-html_ = el "html"
+html_ :: Title -> Structure -> Html
+html_ title content =
+  Html
+    ( el "html"
+      ( el "head" (el "title" title)
+        <> el "body" (getStructureString content)
+      )
+    )
 
 body_ :: String -> String
 body_ = el "body"
@@ -14,17 +29,37 @@ head_ = el "head"
 title_ :: String -> String
 title_ = el "title"
 
-p_ :: String -> String
-p_ = el "p"
+p_ :: String -> Structure
+p_ = Structure . el "p"
 
-h1_ :: String -> String
-h1_ = el "h1"
+h1_ :: String -> Structure
+h1_ = Structure . el "h1"
 
-makeHtml :: String -> String -> String
-makeHtml titleString bodyContent = html_ (head_ (title_ titleString) <> body_ bodyContent)
+getStructureString :: Structure -> String
+getStructureString content =
+  case content of
+    Structure str -> str
 
-myHtml :: String
-myHtml = makeHtml "My page title" (h1_ "Hello World!" <> p_ "This is testing the new two functions!")
+render :: Html -> String
+render html =
+  case html of
+    Html str -> str
+
+append_ :: Structure -> Structure -> Structure
+append_ c1 c2 =
+  Structure (getStructureString c1 <> getStructureString c2)
+
+myHtml :: Html
+myHtml =
+  html_
+    "My title"
+    ( append_
+      (h1_ "Heading")
+      ( append_
+        (p_ "Paragraph #1")
+        (p_ "Paragraph #2")
+      )
+    )
 
 main :: IO()
-main = putStrLn myHtml
+main = putStrLn (render myHtml)
