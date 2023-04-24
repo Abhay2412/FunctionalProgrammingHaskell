@@ -27,7 +27,7 @@ html_ :: Title -> Structure -> Html
 html_ title content =
   Html
     ( el "html"
-      ( el "head" (el "title" title)
+      ( el "head" (el "title" (escape title) )
         <> el "body" (getStructureString content)
       )
     )
@@ -42,10 +42,10 @@ title_ :: String -> String
 title_ = el "title"
 
 p_ :: String -> Structure
-p_ = Structure . el "p"
+p_ = Structure . el "p" . escape
 
 h1_ :: String -> Structure
-h1_ = Structure . el "h1"
+h1_ = Structure . el "h1" . escape
 
 getStructureString :: Structure -> String
 getStructureString content =
@@ -60,3 +60,17 @@ render html =
 append_ :: Structure -> Structure -> Structure
 append_ c1 c2 =
   Structure (getStructureString c1 <> getStructureString c2)
+
+escape :: String -> String 
+escape =
+    let
+        escapeChar c =
+            case c of 
+                '<' -> "&lt;"
+                '>' -> "&gt;"
+                '&' -> "&amp;"
+                '"' -> "&quot;"
+                '\''-> "&#39;"
+                _   -> [c]
+    in
+        concat . map escapeChar
