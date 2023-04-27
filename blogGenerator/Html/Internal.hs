@@ -1,4 +1,5 @@
 module Html.Internal where
+import Numeric.Natural
 
 -- Chapter 3 - Building an HTML Printer Library
 newtype Html = Html String
@@ -31,8 +32,8 @@ title_ = el "title"
 p_ :: String -> Structure
 p_ = Structure . el "p" . escape
 
-h1_ :: String -> Structure
-h1_ = Structure . el "h1" . escape
+h_ :: Natural -> String -> Structure
+h_ n = Structure . el ("h" <> show n) . escape
 
 ul_ :: [Structure] -> Structure
 ul_ = Structure . el "ul" . concat . map (el "li" . getStructureString)
@@ -54,6 +55,7 @@ render html =
     Html str -> str
 
 instance Semigroup Structure where (<>) c1 c2 = Structure(getStructureString c1 <> getStructureString c2)
+instance Monoid Structure where mempty = Structure ""
 
 escape :: String -> String 
 escape =
