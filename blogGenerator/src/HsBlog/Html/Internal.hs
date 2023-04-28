@@ -7,10 +7,16 @@ newtype Html = Html String
 
 newtype Structure = Structure String
 
+newtype Content = Content String
+
 type Title = String
 
 el :: String -> String -> String
 el tag content = "<" <> tag <> ">" <> content <> "</" <> tag <> ">" 
+
+elAttr :: String -> String -> String -> String
+elAttr tag attrs content =
+  "<" <> tag <> " " <> attrs <> ">" <> content <> "</" <> tag <> ">"
 
 html_ :: Title -> Structure -> Html
 html_ title content =
@@ -30,11 +36,11 @@ head_ = el "head"
 title_ :: String -> String
 title_ = el "title"
 
-p_ :: String -> Structure
-p_ = Structure . el "p" . escape
+p_ :: Content -> Structure
+p_ = Structure . el "p" . getContentString
 
-h_ :: Natural -> String -> Structure
-h_ n = Structure . el ("h" <> show n) . escape
+h_ :: Natural -> Content -> Structure
+h_ n = Structure . el ("h" <> show n) . getContentString
 
 ul_ :: [Structure] -> Structure
 ul_ = Structure . el "ul" . concat . map (el "li" . getStructureString)
@@ -45,10 +51,48 @@ ol_ = Structure . el "ol" . concat . map (el "li" . getStructureString)
 code_ :: String -> Structure
 code_ = Structure . el "pre" . escape
 
+-- * Content
+
+txt_ :: String -> Content
+txt_ = Content . escape
+
+link_ :: FilePath -> Content -> Content
+link_ path content =
+  Content $
+    elAttr
+      "a"
+      ("href=\"" <> escape path <> "\"")
+      (getContentString content)
+
+img_ :: FilePath -> Content
+img_ path =
+  Content $ "<img src=\"" <> escape path <> "\">"
+
+b_ :: Content -> Content
+b_ content =
+  Content $ el "b" (getContentString content)
+
+i_ :: Content -> Content
+i_ content =
+  Content $ el "i" (getContentString content)
+
+instance Semigroup Content where
+  (<>) c1 c2 =
+    Content (getContentString c1 <> getContentString c2)
+
+instance Monoid Content where
+  mempty = Content ""
+
+
 getStructureString :: Structure -> String
 getStructureString content =
   case content of
     Structure str -> str
+  
+getContentString :: Content -> String
+getContentString content =
+  case content of
+    Content str -> str
 
 render :: Html -> String
 render html =
