@@ -1,4 +1,5 @@
-module Html.Internal where
+-- Internal.hs
+module HsBlog.Html.Internal where
 import Numeric.Natural
 
 -- Chapter 3 - Building an HTML Printer Library

@@ -1,6 +1,6 @@
-module Markup ( Document , Structure(..)) where
+module HsBlog.Markup ( Document , Structure(..), parse) where
 
-import Numeric.Natural
+import Numeric.Natural ( Natural )
 import Data.Maybe (maybeToList)
 
 type Document = [Structure]
