@@ -3,6 +3,7 @@ module HsBlog.Html
   , Title
   , Structure
   , Content
+  , Head
   , html_
   , p_
   , h_
@@ -14,6 +15,8 @@ module HsBlog.Html
   , link_
   , b_
   , i_
+  , stylesheet_
+  , meta_
   , (<>)
   , render
   )

@@ -1,5 +1,6 @@
 -- Internal.hs
 module HsBlog.Html.Internal where
+import Prelude hiding (head)
 import Numeric.Natural
 
 -- Chapter 3 - Building an HTML Printer Library
@@ -8,6 +9,8 @@ newtype Html = Html String
 newtype Structure = Structure String
 
 newtype Content = Content String
+
+newtype Head = Head String
 
 type Title = String
 
@@ -18,11 +21,11 @@ elAttr :: String -> String -> String -> String
 elAttr tag attrs content =
   "<" <> tag <> " " <> attrs <> ">" <> content <> "</" <> tag <> ">"
 
-html_ :: Title -> Structure -> Html
-html_ title content =
+html_ :: Head -> Structure -> Html
+html_ (Head head) content =
   Html
     ( el "html"
-      ( el "head" (el "title" (escape title) )
+      ( el "head" head
         <> el "body" (getStructureString content)
       )
     )
@@ -33,8 +36,14 @@ body_ = el "body"
 head_ :: String -> String
 head_ = el "head" 
 
-title_ :: String -> String
-title_ = el "title"
+stylesheet_ :: FilePath -> Head
+stylesheet_ path = Head $ "<link rel=\"stylesheet\" type=\"text/css\" href=\"" <> escape path <> "\">"
+
+meta_ :: String -> String -> Head
+meta_ name content = Head $ "<meta name=\"" <> escape name <> "\" content=\"" <> escape content <> "\">"
+
+title_ :: String -> Head
+title_ = Head . el "title" . escape
 
 p_ :: Content -> Structure
 p_ = Structure . el "p" . getContentString
@@ -99,8 +108,8 @@ render html =
   case html of
     Html str -> str
 
-instance Semigroup Structure where (<>) c1 c2 = Structure(getStructureString c1 <> getStructureString c2)
-instance Monoid Structure where mempty = Structure ""
+instance Semigroup Head where (<>) (Head h1) (Head h2) = Head (h1 <> h2)
+instance Monoid Head where mempty = Head ""
 
 escape :: String -> String 
 escape =
