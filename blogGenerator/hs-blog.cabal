@@ -60,7 +60,8 @@ executable hs-blog-gen
   hs-source-dirs: test
   main-is: Spec.hs
 
-  -- other-modules:
+  other-modules:
+    MarkupParsingSpec
   build-depends:
       base
     , hspec
